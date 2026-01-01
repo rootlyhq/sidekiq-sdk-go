@@ -186,6 +186,23 @@ func (f *SidekiqFixtures) SampleProcess(identity string) ProcessInfo {
 	}
 }
 
+// SampleWork creates a sample work info.
+func (f *SidekiqFixtures) SampleWork(jid, class, queue string) WorkInfo {
+	now := float64(time.Now().Unix())
+	return WorkInfo{
+		Queue: queue,
+		RunAt: now,
+		Payload: map[string]interface{}{
+			"jid":         jid,
+			"class":       class,
+			"args":        []interface{}{},
+			"queue":       queue,
+			"created_at":  now,
+			"enqueued_at": now,
+		},
+	}
+}
+
 // SampleActiveJob creates a sample ActiveJob wrapper payload.
 func (f *SidekiqFixtures) SampleActiveJob(jid, wrappedClass string, args ...interface{}) ActiveJobPayload {
 	now := float64(time.Now().Unix())
