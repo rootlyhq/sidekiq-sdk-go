@@ -57,29 +57,6 @@ end
 return 1
 `)
 
-// enqueueJobsScript atomically moves due jobs from a sorted set to their queues.
-var enqueueJobsScript = redis.NewScript(`
-local sorted_set = KEYS[1]
-local queues_key = KEYS[2]
-local now = tonumber(ARGV[1])
-local limit = tonumber(ARGV[2])
-
-local jobs = redis.call('ZRANGEBYSCORE', sorted_set, '-inf', now, 'LIMIT', 0, limit)
-local count = 0
-
-for _, job in ipairs(jobs) do
-    local data = cjson.decode(job)
-    local queue = data.queue or 'default'
-
-    redis.call('ZREM', sorted_set, job)
-    redis.call('SADD', queues_key, queue)
-    redis.call('LPUSH', 'queue:' .. queue, job)
-    count = count + 1
-end
-
-return count
-`)
-
 // RequeueJob atomically moves a job from a sorted set to its queue.
 func (c *Client) RequeueJob(ctx context.Context, setName, jobValue string) error {
 	job, err := newJobRecord(jobValue, "")

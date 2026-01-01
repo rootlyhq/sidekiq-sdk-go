@@ -149,7 +149,7 @@ func TestSortedEntry_At(t *testing.T) {
 	set := NewScheduledSet(client)
 
 	var entry *SortedEntry
-	set.Each(ctx, func(e *SortedEntry) bool {
+	_ = set.Each(ctx, func(e *SortedEntry) bool {
 		entry = e
 		return false
 	})
@@ -183,7 +183,7 @@ func TestSortedEntry_HasError(t *testing.T) {
 	// Check scheduled job (no error)
 	schedSet := NewScheduledSet(client)
 	var schedEntry *SortedEntry
-	schedSet.Each(ctx, func(e *SortedEntry) bool {
+	_ = schedSet.Each(ctx, func(e *SortedEntry) bool {
 		schedEntry = e
 		return false
 	})
@@ -194,7 +194,7 @@ func TestSortedEntry_HasError(t *testing.T) {
 	// Check retry job (has error)
 	retrySet := NewRetrySet(client)
 	var retryEntry *SortedEntry
-	retrySet.Each(ctx, func(e *SortedEntry) bool {
+	_ = retrySet.Each(ctx, func(e *SortedEntry) bool {
 		retryEntry = e
 		return false
 	})

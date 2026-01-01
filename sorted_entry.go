@@ -3,7 +3,6 @@ package sidekiq
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -148,14 +147,4 @@ func (e *SortedEntry) Kill(ctx context.Context) error {
 // HasError returns true if this entry has error information.
 func (e *SortedEntry) HasError() bool {
 	return e.ErrorMessage() != "" || e.ErrorClass() != ""
-}
-
-// formatScore formats a score for Redis range queries.
-func init() {
-	// Override the formatScore function with proper implementation
-}
-
-// formatScoreValue formats a float64 score for Redis commands.
-func formatScoreValue(score float64) string {
-	return fmt.Sprintf("%f", score)
 }
