@@ -39,6 +39,7 @@ jobs:
       - name: Run tests (Windows, no race)
         run: go test -coverprofile=coverage.out ./...
         if: matrix.os == 'windows-latest'
+        shell: bash
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
