@@ -1,0 +1,36 @@
+version: 2
+
+project_name: sidekiq-sdk-go
+
+builds:
+  - skip: true  # Library only, no binary
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+changelog:
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+  groups:
+    - title: Features
+      regexp: "^feat"
+      order: 0
+    - title: Bug Fixes
+      regexp: "^fix"
+      order: 1
+    - title: Other
+      order: 999
+
+release:
+  github:
+    owner: rootlyhq
+    name: sidekiq-sdk-go
+  prerelease: auto

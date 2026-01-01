@@ -1,0 +1,43 @@
+run:
+  timeout: 5m
+
+output:
+  formats:
+    - format: colored-line-number
+
+linters:
+  enable:
+    - bodyclose
+    - gocritic
+    - gocyclo
+    - goimports
+    - goprintffuncname
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - staticcheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+linters-settings:
+  gocyclo:
+    min-complexity: 25
+  goimports:
+    local-prefixes: github.com/rootlyhq/sidekiq-sdk-go
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - unparam
+    - path: internal/testdata/
+      linters:
+        - unused
