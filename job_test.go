@@ -49,7 +49,7 @@ func TestJobRecord_Basic(t *testing.T) {
 func TestJobRecord_ActiveJob(t *testing.T) {
 	now := time.Now()
 	job := map[string]interface{}{
-		"class":   "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper",
+		"class":   "Sidekiq::ActiveJob::Wrapper",
 		"wrapped": "MyActiveJob",
 		"args": []interface{}{
 			map[string]interface{}{
@@ -70,7 +70,7 @@ func TestJobRecord_ActiveJob(t *testing.T) {
 	}
 
 	// Raw class is the wrapper
-	if record.Class() != "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper" {
+	if record.Class() != "Sidekiq::ActiveJob::Wrapper" {
 		t.Errorf("Class() = %q, want wrapper class", record.Class())
 	}
 

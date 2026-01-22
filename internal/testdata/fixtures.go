@@ -210,7 +210,7 @@ func (f *SidekiqFixtures) SampleActiveJob(jid, wrappedClass string, args ...inte
 		args = []interface{}{}
 	}
 	return ActiveJobPayload{
-		Class:   "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper",
+		Class:   "Sidekiq::ActiveJob::Wrapper",
 		Wrapped: wrappedClass,
 		Queue:   "default",
 		Args: []struct {
