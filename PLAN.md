@@ -711,7 +711,7 @@ func (f *SidekiqFixtures) SampleProcess(identity string) ProcessInfo {
 func (f *SidekiqFixtures) SampleActiveJob(jid, wrappedClass string, args ...interface{}) ActiveJobPayload {
     now := float64(time.Now().Unix())
     return ActiveJobPayload{
-        Class:   "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper",
+        Class:   "Sidekiq::ActiveJob::Wrapper",
         Wrapped: wrappedClass,
         Queue:   "default",
         Args: []struct {
@@ -1663,18 +1663,18 @@ func (c *Client) EnqueueIn(ctx context.Context, in time.Duration, class string, 
 
 ## API Comparison Reference
 
-| Ruby API | Go API | Notes |
-|----------|--------|-------|
-| `Sidekiq::Stats.new` | `NewStats(ctx, client)` | Returns struct |
-| `Sidekiq::Stats::History.new(days, start)` | `GetHistory(ctx, client, days, start)` | Function |
-| `Sidekiq::Queue.all` | `AllQueues(ctx, client)` | Returns slice |
-| `Sidekiq::Queue.new(name)` | `NewQueue(client, name)` | Requires client |
-| `queue.each { \|job\| }` | `queue.Each(ctx, func(j) bool)` | Callback |
-| `Sidekiq::ScheduledSet.new` | `NewScheduledSet(client)` | |
-| `Sidekiq::RetrySet.new` | `NewRetrySet(client)` | |
-| `Sidekiq::DeadSet.new` | `NewDeadSet(client)` | |
-| `Sidekiq::ProcessSet.new` | `NewProcessSet(client)` | |
-| `Sidekiq::WorkSet.new` | `NewWorkSet(client)` | |
+| Ruby API                                   | Go API                                 | Notes           |
+| ------------------------------------------ | -------------------------------------- | --------------- |
+| `Sidekiq::Stats.new`                       | `NewStats(ctx, client)`                | Returns struct  |
+| `Sidekiq::Stats::History.new(days, start)` | `GetHistory(ctx, client, days, start)` | Function        |
+| `Sidekiq::Queue.all`                       | `AllQueues(ctx, client)`               | Returns slice   |
+| `Sidekiq::Queue.new(name)`                 | `NewQueue(client, name)`               | Requires client |
+| `queue.each { \|job\| }`                   | `queue.Each(ctx, func(j) bool)`        | Callback        |
+| `Sidekiq::ScheduledSet.new`                | `NewScheduledSet(client)`              |                 |
+| `Sidekiq::RetrySet.new`                    | `NewRetrySet(client)`                  |                 |
+| `Sidekiq::DeadSet.new`                     | `NewDeadSet(client)`                   |                 |
+| `Sidekiq::ProcessSet.new`                  | `NewProcessSet(client)`                |                 |
+| `Sidekiq::WorkSet.new`                     | `NewWorkSet(client)`                   |                 |
 
 ---
 
@@ -1685,13 +1685,13 @@ func (c *Client) EnqueueIn(ctx context.Context, in time.Duration, class string, 
 - Sidekiq 7.x+
 - Redis 6.x+
 
-| Feature | Sidekiq 7.x |
-|---------|-------------|
-| Basic queues | Yes |
-| Sorted sets | Yes |
-| Stats | Yes |
-| Process info | Yes |
-| Capsules | Yes |
+| Feature      | Sidekiq 7.x |
+| ------------ | ----------- |
+| Basic queues | Yes         |
+| Sorted sets  | Yes         |
+| Stats        | Yes         |
+| Process info | Yes         |
+| Capsules     | Yes         |
 
 ---
 
@@ -1733,15 +1733,15 @@ func (c *Client) EnqueueIn(ctx context.Context, in time.Duration, class string, 
 
 ## Design Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Module path | `github.com/rootlyhq/sidekiq-sdk-go` | Clear naming convention |
-| Go version | 1.24+ | Latest stable, improved stdlib |
-| Sidekiq version | 7.x+ | Focus on modern API, Capsules support |
-| Redis client | `redis.UniversalClient` | Supports standalone, sentinel, and cluster |
-| Namespace handling | Explicit via `WithNamespace()` | Clear, no magic auto-detection |
-| Iterator pattern | Callback-based | Wide compatibility, simple |
-| Batch support | Out of scope | Sidekiq Pro/Enterprise feature |
+| Decision           | Choice                               | Rationale                                  |
+| ------------------ | ------------------------------------ | ------------------------------------------ |
+| Module path        | `github.com/rootlyhq/sidekiq-sdk-go` | Clear naming convention                    |
+| Go version         | 1.24+                                | Latest stable, improved stdlib             |
+| Sidekiq version    | 7.x+                                 | Focus on modern API, Capsules support      |
+| Redis client       | `redis.UniversalClient`              | Supports standalone, sentinel, and cluster |
+| Namespace handling | Explicit via `WithNamespace()`       | Clear, no magic auto-detection             |
+| Iterator pattern   | Callback-based                       | Wide compatibility, simple                 |
+| Batch support      | Out of scope                         | Sidekiq Pro/Enterprise feature             |
 
 ---
 
