@@ -3,7 +3,7 @@ module github.com/rootlyhq/sidekiq-sdk-go
 go 1.24
 
 require (
-	github.com/alicebob/miniredis/v2 v2.35.0
+	github.com/alicebob/miniredis/v2 v2.36.1
 	github.com/redis/go-redis/v9 v9.7.0
 )
 
