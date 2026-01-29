@@ -42,7 +42,7 @@ jobs:
         shell: bash
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-24.04'
         with:
           files: coverage.out
