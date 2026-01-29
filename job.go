@@ -7,7 +7,7 @@ import (
 )
 
 // ActiveJob wrapper class name
-const activeJobWrapperClass = "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
+const activeJobWrapperClass = "Sidekiq::ActiveJob::Wrapper"
 
 // JobRecord represents an immutable Sidekiq job.
 // It provides accessors for all standard job fields.
