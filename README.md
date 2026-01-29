@@ -336,4 +336,4 @@ make version
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+MIT License © 2026 Rootly Inc. - see [LICENCE.txt](LICENCE.txt)
