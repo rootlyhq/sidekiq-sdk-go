@@ -5,14 +5,15 @@ run:
 
 output:
   formats:
-    colored-line-number: {}
+    text: {}
 
 formatters:
   enable:
     - goimports
   settings:
     goimports:
-      local-prefixes: github.com/rootlyhq/sidekiq-sdk-go
+      local-prefixes:
+        - github.com/rootlyhq/sidekiq-sdk-go
 
 linters:
   default: none
