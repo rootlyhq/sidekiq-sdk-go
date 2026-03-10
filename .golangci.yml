@@ -1,16 +1,26 @@
+version: "2"
+
 run:
   timeout: 5m
 
 output:
   formats:
-    - format: colored-line-number
+    text: {}
+
+formatters:
+  enable:
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/rootlyhq/sidekiq-sdk-go
 
 linters:
+  default: none
   enable:
     - bodyclose
     - gocritic
     - gocyclo
-    - goimports
     - goprintffuncname
     - govet
     - ineffassign
@@ -21,23 +31,19 @@ linters:
     - unparam
     - unused
     - whitespace
-
-linters-settings:
-  gocyclo:
-    min-complexity: 25
-  goimports:
-    local-prefixes: github.com/rootlyhq/sidekiq-sdk-go
-  govet:
-    enable-all: true
-    disable:
-      - fieldalignment
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - unparam
-    - path: internal/testdata/
-      linters:
-        - unused
+  settings:
+    gocyclo:
+      min-complexity: 25
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - unparam
+      - path: internal/testdata/
+        linters:
+          - unused
