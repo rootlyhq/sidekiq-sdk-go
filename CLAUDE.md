@@ -6,7 +6,7 @@ Go SDK for interacting with Sidekiq's Redis data structures. Provides monitoring
 
 ## Tech Stack
 
-- **Language**: Go 1.24+
+- **Language**: Go 1.26+
 - **Redis Client**: github.com/redis/go-redis/v9
 - **Testing**: github.com/alicebob/miniredis/v2
 - **Linting**: golangci-lint

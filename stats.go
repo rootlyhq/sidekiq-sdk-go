@@ -2,6 +2,8 @@ package sidekiq
 
 import (
 	"context"
+	"errors"
+	"maps"
 	"strconv"
 	"time"
 
@@ -38,7 +40,7 @@ func NewStats(ctx context.Context, client *Client) (*Stats, error) {
 	processesCmd := pipe.SMembers(ctx, client.key(keyProcesses))
 
 	_, err := pipe.Exec(ctx)
-	if err != nil && err != redis.Nil {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		return nil, wrapRedisErr("fetch stats", err)
 	}
 
@@ -164,9 +166,7 @@ func (s *Stats) DefaultQueueLatency() float64 {
 // Queues returns a map of queue names to their sizes.
 func (s *Stats) Queues() map[string]int64 {
 	result := make(map[string]int64, len(s.queues))
-	for k, v := range s.queues {
-		result[k] = v
-	}
+	maps.Copy(result, s.queues)
 	return result
 }
 
@@ -204,7 +204,7 @@ func GetHistory(ctx context.Context, client *Client, days int, startDate time.Ti
 	failedCmds := make([]*redis.StringCmd, days)
 	dates := make([]time.Time, days)
 
-	for i := 0; i < days; i++ {
+	for i := range days {
 		date := startDate.AddDate(0, 0, -i)
 		dates[i] = date
 		dateStr := date.Format("2006-01-02")
@@ -213,12 +213,12 @@ func GetHistory(ctx context.Context, client *Client, days int, startDate time.Ti
 	}
 
 	_, err := pipe.Exec(ctx)
-	if err != nil && err != redis.Nil {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		return nil, wrapRedisErr("fetch history", err)
 	}
 
 	result := make([]DayStats, days)
-	for i := 0; i < days; i++ {
+	for i := range days {
 		result[i].Date = dates[i]
 		if v, err := processedCmds[i].Result(); err == nil {
 			result[i].Processed, _ = strconv.ParseInt(v, 10, 64)

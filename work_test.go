@@ -152,10 +152,10 @@ func TestWork_Job(t *testing.T) {
 	fixtures.AddWork(proc.Identity, "tid1", testdata.WorkInfo{
 		Queue: "default",
 		RunAt: float64(time.Now().Unix()),
-		Payload: map[string]interface{}{
+		Payload: map[string]any{
 			"jid":         "work-job-123",
 			"class":       "TestWorker",
-			"args":        []interface{}{"arg1", 42},
+			"args":        []any{"arg1", 42},
 			"queue":       "default",
 			"created_at":  float64(time.Now().Unix()),
 			"enqueued_at": float64(time.Now().Unix()),

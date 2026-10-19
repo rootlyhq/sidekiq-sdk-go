@@ -10,7 +10,7 @@ func TestEnqueue_Immediate(t *testing.T) {
 	client, _ := setupTestClient(t)
 	ctx := context.Background()
 
-	jid, err := client.Enqueue(ctx, "MyWorker", []interface{}{"arg1", 42}, nil)
+	jid, err := client.Enqueue(ctx, "MyWorker", []any{"arg1", 42}, nil)
 	if err != nil {
 		t.Fatalf("Enqueue() error = %v", err)
 	}
@@ -41,7 +41,7 @@ func TestEnqueue_WithOptions(t *testing.T) {
 	client, _ := setupTestClient(t)
 	ctx := context.Background()
 
-	jid, err := client.Enqueue(ctx, "MyWorker", []interface{}{"arg1"},
+	jid, err := client.Enqueue(ctx, "MyWorker", []any{"arg1"},
 		&EnqueueOptions{
 			Queue: "critical",
 			Retry: 5,
@@ -68,7 +68,7 @@ func TestEnqueueAt_Future(t *testing.T) {
 	ctx := context.Background()
 
 	future := time.Now().Add(time.Hour)
-	jid, err := client.EnqueueAt(ctx, future, "ScheduledWorker", []interface{}{"arg"}, nil)
+	jid, err := client.EnqueueAt(ctx, future, "ScheduledWorker", []any{"arg"}, nil)
 	if err != nil {
 		t.Fatalf("EnqueueAt() error = %v", err)
 	}
@@ -95,7 +95,7 @@ func TestEnqueueAt_Past(t *testing.T) {
 	ctx := context.Background()
 
 	past := time.Now().Add(-time.Hour)
-	jid, err := client.EnqueueAt(ctx, past, "Worker", []interface{}{}, nil)
+	jid, err := client.EnqueueAt(ctx, past, "Worker", []any{}, nil)
 	if err != nil {
 		t.Fatalf("EnqueueAt() error = %v", err)
 	}
@@ -112,7 +112,7 @@ func TestEnqueueIn(t *testing.T) {
 	client, _ := setupTestClient(t)
 	ctx := context.Background()
 
-	jid, err := client.EnqueueIn(ctx, time.Hour, "DelayedWorker", []interface{}{"arg"}, nil)
+	jid, err := client.EnqueueIn(ctx, time.Hour, "DelayedWorker", []any{"arg"}, nil)
 	if err != nil {
 		t.Fatalf("EnqueueIn() error = %v", err)
 	}
@@ -155,7 +155,7 @@ func TestEnqueueBulk(t *testing.T) {
 	client, _ := setupTestClient(t)
 	ctx := context.Background()
 
-	argsList := [][]interface{}{
+	argsList := [][]any{
 		{"arg1"},
 		{"arg2"},
 		{"arg3"},

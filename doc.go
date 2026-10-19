@@ -38,7 +38,7 @@
 //
 // # Compatibility
 //
-//   - Go 1.24+
+//   - Go 1.26+
 //   - Sidekiq 7.x+
 //   - Redis 6.x+
 package sidekiq

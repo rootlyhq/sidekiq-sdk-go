@@ -92,8 +92,8 @@ type Work struct {
 	client   *Client
 	process  string
 	tid      string
-	info     map[string]interface{}
-	payload  map[string]interface{}
+	info     map[string]any
+	payload  map[string]any
 	rawValue string
 }
 
@@ -104,7 +104,7 @@ func newWork(client *Client, process, tid, data string) (*Work, error) {
 		return nil, &JobParseError{Err: err}
 	}
 
-	var payload map[string]interface{}
+	var payload map[string]any
 	if p := sjson.GetMap(info, "payload"); p != nil {
 		payload = p
 	}
@@ -164,11 +164,11 @@ func (w *Work) Job() *JobRecord {
 }
 
 // Payload returns the raw job payload.
-func (w *Work) Payload() map[string]interface{} {
+func (w *Work) Payload() map[string]any {
 	return w.payload
 }
 
 // Info returns the raw work info.
-func (w *Work) Info() map[string]interface{} {
+func (w *Work) Info() map[string]any {
 	return w.info
 }

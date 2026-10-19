@@ -31,18 +31,18 @@ func (f *SidekiqFixtures) key(parts ...string) string {
 
 // JobPayload represents a Sidekiq job payload.
 type JobPayload struct {
-	Class        string        `json:"class"`
-	Args         []interface{} `json:"args"`
-	JID          string        `json:"jid"`
-	CreatedAt    float64       `json:"created_at"`
-	EnqueuedAt   float64       `json:"enqueued_at"`
-	Queue        string        `json:"queue,omitempty"`
-	Retry        interface{}   `json:"retry,omitempty"`
-	Tags         []string      `json:"tags,omitempty"`
-	ErrorMessage string        `json:"error_message,omitempty"`
-	ErrorClass   string        `json:"error_class,omitempty"`
-	FailedAt     float64       `json:"failed_at,omitempty"`
-	RetryCount   int           `json:"retry_count,omitempty"`
+	Class        string   `json:"class"`
+	Args         []any    `json:"args"`
+	JID          string   `json:"jid"`
+	CreatedAt    float64  `json:"created_at"`
+	EnqueuedAt   float64  `json:"enqueued_at"`
+	Queue        string   `json:"queue,omitempty"`
+	Retry        any      `json:"retry,omitempty"`
+	Tags         []string `json:"tags,omitempty"`
+	ErrorMessage string   `json:"error_message,omitempty"`
+	ErrorClass   string   `json:"error_class,omitempty"`
+	FailedAt     float64  `json:"failed_at,omitempty"`
+	RetryCount   int      `json:"retry_count,omitempty"`
 }
 
 // ActiveJobPayload represents an ActiveJob wrapper payload.
@@ -51,8 +51,8 @@ type ActiveJobPayload struct {
 	Wrapped string `json:"wrapped"`
 	Queue   string `json:"queue"`
 	Args    []struct {
-		JobClass  string        `json:"job_class"`
-		Arguments []interface{} `json:"arguments"`
+		JobClass  string `json:"job_class"`
+		Arguments []any  `json:"arguments"`
 	} `json:"args"`
 	JID        string  `json:"jid"`
 	CreatedAt  float64 `json:"created_at"`
@@ -75,9 +75,9 @@ type ProcessInfo struct {
 
 // WorkInfo represents work being executed.
 type WorkInfo struct {
-	Queue   string                 `json:"queue"`
-	RunAt   float64                `json:"run_at"`
-	Payload map[string]interface{} `json:"payload"`
+	Queue   string         `json:"queue"`
+	RunAt   float64        `json:"run_at"`
+	Payload map[string]any `json:"payload"`
 }
 
 // SetupStats populates stat counters.
@@ -145,10 +145,10 @@ func (f *SidekiqFixtures) PauseQueue(name string) {
 }
 
 // SampleJob creates a sample job payload.
-func (f *SidekiqFixtures) SampleJob(jid, class string, args ...interface{}) JobPayload {
+func (f *SidekiqFixtures) SampleJob(jid, class string, args ...any) JobPayload {
 	now := float64(time.Now().Unix())
 	if args == nil {
-		args = []interface{}{}
+		args = []any{}
 	}
 	return JobPayload{
 		Class:      class,
@@ -192,10 +192,10 @@ func (f *SidekiqFixtures) SampleWork(jid, class, queue string) WorkInfo {
 	return WorkInfo{
 		Queue: queue,
 		RunAt: now,
-		Payload: map[string]interface{}{
+		Payload: map[string]any{
 			"jid":         jid,
 			"class":       class,
-			"args":        []interface{}{},
+			"args":        []any{},
 			"queue":       queue,
 			"created_at":  now,
 			"enqueued_at": now,
@@ -204,18 +204,18 @@ func (f *SidekiqFixtures) SampleWork(jid, class, queue string) WorkInfo {
 }
 
 // SampleActiveJob creates a sample ActiveJob wrapper payload.
-func (f *SidekiqFixtures) SampleActiveJob(jid, wrappedClass string, args ...interface{}) ActiveJobPayload {
+func (f *SidekiqFixtures) SampleActiveJob(jid, wrappedClass string, args ...any) ActiveJobPayload {
 	now := float64(time.Now().Unix())
 	if args == nil {
-		args = []interface{}{}
+		args = []any{}
 	}
 	return ActiveJobPayload{
 		Class:   "Sidekiq::ActiveJob::Wrapper",
 		Wrapped: wrappedClass,
 		Queue:   "default",
 		Args: []struct {
-			JobClass  string        `json:"job_class"`
-			Arguments []interface{} `json:"arguments"`
+			JobClass  string `json:"job_class"`
+			Arguments []any  `json:"arguments"`
 		}{
 			{JobClass: wrappedClass, Arguments: args},
 		},

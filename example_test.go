@@ -187,7 +187,7 @@ func ExampleClient_Enqueue() {
 	ctx := context.Background()
 
 	// Enqueue a job for immediate processing
-	jid, err := client.Enqueue(ctx, "MyWorker", []interface{}{"arg1", 42}, nil)
+	jid, err := client.Enqueue(ctx, "MyWorker", []any{"arg1", 42}, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
@@ -195,7 +195,7 @@ func ExampleClient_Enqueue() {
 	fmt.Printf("Enqueued job: %s\n", jid)
 
 	// Enqueue with options
-	jid, err = client.Enqueue(ctx, "CriticalWorker", []interface{}{"data"},
+	jid, err = client.Enqueue(ctx, "CriticalWorker", []any{"data"},
 		&sidekiq.EnqueueOptions{
 			Queue: "critical",
 			Retry: 5,
@@ -220,7 +220,7 @@ func ExampleClient_EnqueueAt() {
 	// Schedule a job for 1 hour from now
 	scheduleTime := time.Now().Add(time.Hour)
 	jid, err := client.EnqueueAt(ctx, scheduleTime, "ScheduledWorker",
-		[]interface{}{"scheduled_data"}, nil)
+		[]any{"scheduled_data"}, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
@@ -239,7 +239,7 @@ func ExampleClient_EnqueueIn() {
 
 	// Schedule a job to run in 30 minutes
 	jid, err := client.EnqueueIn(ctx, 30*time.Minute, "DelayedWorker",
-		[]interface{}{"delayed_data"}, nil)
+		[]any{"delayed_data"}, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return

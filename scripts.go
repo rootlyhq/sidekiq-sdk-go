@@ -74,7 +74,7 @@ func (c *Client) RequeueJob(ctx context.Context, setName, jobValue string) error
 		c.queueKey(queue),
 		c.key(keyQueues),
 	}
-	args := []interface{}{queue, jobValue}
+	args := []any{queue, jobValue}
 
 	result, err := requeueScript.Run(ctx, c.rdb, keys, args...).Int()
 	if err != nil {
@@ -92,7 +92,7 @@ func (c *Client) KillJob(ctx context.Context, setName, jobValue string, score fl
 		c.key(setName),
 		c.key(keyDead),
 	}
-	args := []interface{}{
+	args := []any{
 		jobValue,
 		score,
 		DefaultDeadSetMaxJobs,

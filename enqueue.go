@@ -16,7 +16,7 @@ type EnqueueOptions struct {
 	Queue string
 	// Retry specifies the retry behavior.
 	// Can be true (default retries), false (no retries), or an int (max retries).
-	Retry interface{}
+	Retry any
 	// Tags are optional tags for the job.
 	Tags []string
 	// Backtrace specifies how many backtrace lines to keep on failure.
@@ -25,24 +25,24 @@ type EnqueueOptions struct {
 
 // Enqueue adds a job to a queue for immediate processing.
 // Returns the job ID.
-func (c *Client) Enqueue(ctx context.Context, class string, args []interface{}, opts *EnqueueOptions) (string, error) {
+func (c *Client) Enqueue(ctx context.Context, class string, args []any, opts *EnqueueOptions) (string, error) {
 	return c.enqueue(ctx, class, args, opts, time.Time{})
 }
 
 // EnqueueAt adds a job to be processed at a specific time.
 // Returns the job ID.
-func (c *Client) EnqueueAt(ctx context.Context, at time.Time, class string, args []interface{}, opts *EnqueueOptions) (string, error) {
+func (c *Client) EnqueueAt(ctx context.Context, at time.Time, class string, args []any, opts *EnqueueOptions) (string, error) {
 	return c.enqueue(ctx, class, args, opts, at)
 }
 
 // EnqueueIn adds a job to be processed after a duration.
 // Returns the job ID.
-func (c *Client) EnqueueIn(ctx context.Context, in time.Duration, class string, args []interface{}, opts *EnqueueOptions) (string, error) {
+func (c *Client) EnqueueIn(ctx context.Context, in time.Duration, class string, args []any, opts *EnqueueOptions) (string, error) {
 	return c.enqueue(ctx, class, args, opts, time.Now().Add(in))
 }
 
 // enqueue is the internal implementation of job enqueueing.
-func (c *Client) enqueue(ctx context.Context, class string, args []interface{}, opts *EnqueueOptions, at time.Time) (string, error) {
+func (c *Client) enqueue(ctx context.Context, class string, args []any, opts *EnqueueOptions, at time.Time) (string, error) {
 	if opts == nil {
 		opts = &EnqueueOptions{}
 	}
@@ -53,7 +53,7 @@ func (c *Client) enqueue(ctx context.Context, class string, args []interface{}, 
 	}
 
 	if args == nil {
-		args = []interface{}{}
+		args = []any{}
 	}
 
 	jid, err := generateJID()
@@ -62,7 +62,7 @@ func (c *Client) enqueue(ctx context.Context, class string, args []interface{}, 
 	}
 
 	now := float64(time.Now().Unix())
-	job := map[string]interface{}{
+	job := map[string]any{
 		"class":       class,
 		"args":        args,
 		"jid":         jid,
@@ -126,7 +126,7 @@ func generateJID() (string, error) {
 
 // EnqueueBulk adds multiple jobs to a queue efficiently.
 // Returns the number of jobs enqueued.
-func (c *Client) EnqueueBulk(ctx context.Context, class string, argsList [][]interface{}, opts *EnqueueOptions) (int64, error) {
+func (c *Client) EnqueueBulk(ctx context.Context, class string, argsList [][]any, opts *EnqueueOptions) (int64, error) {
 	if len(argsList) == 0 {
 		return 0, nil
 	}
@@ -146,7 +146,7 @@ func (c *Client) EnqueueBulk(ctx context.Context, class string, argsList [][]int
 	now := float64(time.Now().Unix())
 	for _, args := range argsList {
 		if args == nil {
-			args = []interface{}{}
+			args = []any{}
 		}
 
 		jid, err := generateJID()
@@ -154,7 +154,7 @@ func (c *Client) EnqueueBulk(ctx context.Context, class string, argsList [][]int
 			continue
 		}
 
-		job := map[string]interface{}{
+		job := map[string]any{
 			"class":       class,
 			"args":        args,
 			"jid":         jid,

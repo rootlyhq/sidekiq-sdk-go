@@ -8,15 +8,15 @@ import (
 
 func TestJobRecord_Basic(t *testing.T) {
 	now := time.Now()
-	job := map[string]interface{}{
+	job := map[string]any{
 		"class":       "MyWorker",
-		"args":        []interface{}{"arg1", 42},
+		"args":        []any{"arg1", 42},
 		"jid":         "abc123",
 		"queue":       "default",
 		"created_at":  float64(now.Unix()),
 		"enqueued_at": float64(now.Unix()),
 		"retry":       true,
-		"tags":        []interface{}{"important", "batch-1"},
+		"tags":        []any{"important", "batch-1"},
 	}
 	data, _ := json.Marshal(job)
 
@@ -48,13 +48,13 @@ func TestJobRecord_Basic(t *testing.T) {
 
 func TestJobRecord_ActiveJob(t *testing.T) {
 	now := time.Now()
-	job := map[string]interface{}{
+	job := map[string]any{
 		"class":   "Sidekiq::ActiveJob::Wrapper",
 		"wrapped": "MyActiveJob",
-		"args": []interface{}{
-			map[string]interface{}{
+		"args": []any{
+			map[string]any{
 				"job_class": "MyActiveJob",
-				"arguments": []interface{}{"real_arg1", "real_arg2"},
+				"arguments": []any{"real_arg1", "real_arg2"},
 			},
 		},
 		"jid":         "xyz789",
@@ -88,9 +88,9 @@ func TestJobRecord_ActiveJob(t *testing.T) {
 
 func TestJobRecord_FailedJob(t *testing.T) {
 	now := time.Now()
-	job := map[string]interface{}{
+	job := map[string]any{
 		"class":         "FailingWorker",
-		"args":          []interface{}{},
+		"args":          []any{},
 		"jid":           "fail123",
 		"queue":         "default",
 		"created_at":    float64(now.Unix()),
@@ -129,9 +129,9 @@ func TestJobRecord_InvalidJSON(t *testing.T) {
 }
 
 func TestJobRecord_Get(t *testing.T) {
-	job := map[string]interface{}{
+	job := map[string]any{
 		"class":         "Worker",
-		"args":          []interface{}{},
+		"args":          []any{},
 		"jid":           "get123",
 		"custom_field":  "custom_value",
 		"custom_number": float64(42),

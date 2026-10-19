@@ -26,14 +26,14 @@ func WithLogger(l Logger) Option {
 
 // Logger is the interface for pluggable logging.
 type Logger interface {
-	Debug(msg string, keysAndValues ...interface{})
-	Info(msg string, keysAndValues ...interface{})
-	Error(msg string, keysAndValues ...interface{})
+	Debug(msg string, keysAndValues ...any)
+	Info(msg string, keysAndValues ...any)
+	Error(msg string, keysAndValues ...any)
 }
 
 // noopLogger is a logger that does nothing.
 type noopLogger struct{}
 
-func (noopLogger) Debug(string, ...interface{}) {}
-func (noopLogger) Info(string, ...interface{})  {}
-func (noopLogger) Error(string, ...interface{}) {}
+func (noopLogger) Debug(string, ...any) {}
+func (noopLogger) Info(string, ...any)  {}
+func (noopLogger) Error(string, ...any) {}

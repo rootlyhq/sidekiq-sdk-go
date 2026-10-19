@@ -2,6 +2,7 @@ package sidekiq
 
 import (
 	"context"
+	"errors"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -73,7 +74,7 @@ func (q *Queue) Unpause(ctx context.Context) error {
 // Returns 0 if the queue is empty.
 func (q *Queue) Latency(ctx context.Context) (float64, error) {
 	result, err := q.client.rdb.LIndex(ctx, q.client.queueKey(q.name), -1).Result()
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		return 0, nil
 	}
 	if err != nil {

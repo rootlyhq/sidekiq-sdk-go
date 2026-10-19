@@ -249,11 +249,11 @@ workSet.Each(ctx, func(w *sidekiq.Work) bool {
 
 ```go
 // Immediate execution
-jid, err := client.Enqueue(ctx, "MyWorker", []interface{}{"arg1", 42}, nil)
+jid, err := client.Enqueue(ctx, "MyWorker", []any{"arg1", 42}, nil)
 fmt.Printf("Enqueued job: %s\n", jid)
 
 // With options
-jid, _ = client.Enqueue(ctx, "MyWorker", []interface{}{"data"}, &sidekiq.EnqueueOptions{
+jid, _ = client.Enqueue(ctx, "MyWorker", []any{"data"}, &sidekiq.EnqueueOptions{
     Queue: "critical",
     Retry: 5,
     Tags:  []string{"important", "user-123"},
@@ -261,14 +261,14 @@ jid, _ = client.Enqueue(ctx, "MyWorker", []interface{}{"data"}, &sidekiq.Enqueue
 
 // Scheduled execution (absolute time)
 jid, _ = client.EnqueueAt(ctx, time.Now().Add(time.Hour), "MyWorker",
-    []interface{}{"scheduled"}, nil)
+    []any{"scheduled"}, nil)
 
 // Delayed execution (relative duration)
 jid, _ = client.EnqueueIn(ctx, 30*time.Minute, "MyWorker",
-    []interface{}{"delayed"}, nil)
+    []any{"delayed"}, nil)
 
 // Bulk enqueue (efficient for many jobs)
-jobs := [][]interface{}{
+jobs := [][]any{
     {"user-1", "action-a"},
     {"user-2", "action-b"},
     {"user-3", "action-c"},
@@ -308,7 +308,7 @@ stats, _ := sidekiq.NewStats(ctx, client)
 
 ## Compatibility
 
-- Go 1.24+
+- Go 1.26+
 - Sidekiq 7.x+
 - Redis 6.x+
 

@@ -186,7 +186,7 @@ func (js *JobSet) Fetch(ctx context.Context, score float64, jid string) (*Sorted
 }
 
 // Schedule adds a job to the set at the given time.
-func (js *JobSet) Schedule(ctx context.Context, at time.Time, job map[string]interface{}) error {
+func (js *JobSet) Schedule(ctx context.Context, at time.Time, job map[string]any) error {
 	data, err := json.Marshal(job)
 	if err != nil {
 		return &JobParseError{Err: err}
