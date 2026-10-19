@@ -48,7 +48,7 @@ func TestParse(t *testing.T) {
 }
 
 func TestGetString(t *testing.T) {
-	m := map[string]interface{}{
+	m := map[string]any{
 		"name":   "test",
 		"number": 42,
 		"nil":    nil,
@@ -74,7 +74,7 @@ func TestGetString(t *testing.T) {
 }
 
 func TestGetInt64(t *testing.T) {
-	m := map[string]interface{}{
+	m := map[string]any{
 		"float":  float64(42),
 		"int64":  int64(100),
 		"int":    int(200),
@@ -104,7 +104,7 @@ func TestGetInt64(t *testing.T) {
 }
 
 func TestGetFloat64(t *testing.T) {
-	m := map[string]interface{}{
+	m := map[string]any{
 		"float":  float64(3.14),
 		"string": "not a number",
 	}
@@ -128,7 +128,7 @@ func TestGetFloat64(t *testing.T) {
 }
 
 func TestGetBool(t *testing.T) {
-	m := map[string]interface{}{
+	m := map[string]any{
 		"true":   true,
 		"false":  false,
 		"string": "true",
@@ -157,7 +157,7 @@ func TestGetTime(t *testing.T) {
 	now := time.Now()
 	unixFloat := float64(now.Unix()) + float64(now.Nanosecond())/1e9
 
-	m := map[string]interface{}{
+	m := map[string]any{
 		"time":   unixFloat,
 		"zero":   float64(0),
 		"string": "not a time",
@@ -186,10 +186,10 @@ func TestGetTime(t *testing.T) {
 }
 
 func TestGetStringSlice(t *testing.T) {
-	m := map[string]interface{}{
-		"tags":    []interface{}{"tag1", "tag2", "tag3"},
-		"mixed":   []interface{}{"str", 42, "another"},
-		"numbers": []interface{}{1, 2, 3},
+	m := map[string]any{
+		"tags":    []any{"tag1", "tag2", "tag3"},
+		"mixed":   []any{"str", 42, "another"},
+		"numbers": []any{1, 2, 3},
 		"string":  "not a slice",
 	}
 
@@ -230,8 +230,8 @@ func TestGetStringSlice(t *testing.T) {
 }
 
 func TestGetSlice(t *testing.T) {
-	m := map[string]interface{}{
-		"args":   []interface{}{"arg1", 42, true},
+	m := map[string]any{
+		"args":   []any{"arg1", 42, true},
 		"string": "not a slice",
 	}
 
@@ -251,8 +251,8 @@ func TestGetSlice(t *testing.T) {
 }
 
 func TestGetMap(t *testing.T) {
-	m := map[string]interface{}{
-		"nested": map[string]interface{}{
+	m := map[string]any{
+		"nested": map[string]any{
 			"key": "value",
 		},
 		"string": "not a map",
@@ -339,7 +339,7 @@ func TestDecompressBacktrace(t *testing.T) {
 
 func TestMarshal(t *testing.T) {
 	t.Run("valid struct", func(t *testing.T) {
-		data := map[string]interface{}{
+		data := map[string]any{
 			"key":   "value",
 			"count": 42,
 		}
@@ -351,7 +351,7 @@ func TestMarshal(t *testing.T) {
 			t.Error("expected non-empty string")
 		}
 		// Verify it's valid JSON
-		var parsed map[string]interface{}
+		var parsed map[string]any
 		if err := json.Unmarshal([]byte(got), &parsed); err != nil {
 			t.Errorf("result is not valid JSON: %v", err)
 		}

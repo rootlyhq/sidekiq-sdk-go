@@ -2,6 +2,7 @@ package sidekiq
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/rootlyhq/sidekiq-sdk-go/internal/testdata"
@@ -90,7 +91,7 @@ func TestProcessSet_Get_NotFound(t *testing.T) {
 	processSet := NewProcessSet(client)
 
 	_, err := processSet.Get(ctx, "nonexistent")
-	if err != ErrProcessNotFound {
+	if !errors.Is(err, ErrProcessNotFound) {
 		t.Errorf("Get() error = %v, want ErrProcessNotFound", err)
 	}
 }

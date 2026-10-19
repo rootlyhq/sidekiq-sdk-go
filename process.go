@@ -2,6 +2,7 @@ package sidekiq
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -49,7 +50,7 @@ func (ps *ProcessSet) Each(ctx context.Context, fn func(*Process) bool) error {
 
 	for i, cmd := range cmds {
 		data, err := cmd.Result()
-		if err == redis.Nil {
+		if errors.Is(err, redis.Nil) {
 			continue // Process info expired
 		}
 		if err != nil {
@@ -72,7 +73,7 @@ func (ps *ProcessSet) Each(ctx context.Context, fn func(*Process) bool) error {
 // Get retrieves a specific process by identity.
 func (ps *ProcessSet) Get(ctx context.Context, identity string) (*Process, error) {
 	data, err := ps.client.rdb.Get(ctx, ps.client.processKey(identity)).Result()
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		return nil, ErrProcessNotFound
 	}
 	if err != nil {
@@ -128,7 +129,7 @@ func (ps *ProcessSet) TotalRSSKB(ctx context.Context) (int64, error) {
 // Leader returns the identity of the current leader process.
 func (ps *ProcessSet) Leader(ctx context.Context) (string, error) {
 	leader, err := ps.client.rdb.Get(ctx, ps.client.key("leader")).Result()
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		return "", nil
 	}
 	if err != nil {
@@ -141,7 +142,7 @@ func (ps *ProcessSet) Leader(ctx context.Context) (string, error) {
 type Process struct {
 	client   *Client
 	identity string
-	info     map[string]interface{}
+	info     map[string]any
 }
 
 // newProcess creates a new Process from raw data.
@@ -207,7 +208,7 @@ func (p *Process) Capsules() map[string]CapsuleConfig {
 
 	result := make(map[string]CapsuleConfig)
 	for name, v := range capsules {
-		if cfg, ok := v.(map[string]interface{}); ok {
+		if cfg, ok := v.(map[string]any); ok {
 			result[name] = CapsuleConfig{
 				Concurrency: int(sjson.GetInt64(cfg, "concurrency")),
 				Queues:      sjson.GetStringSlice(cfg, "queues"),
@@ -265,6 +266,6 @@ func (p *Process) signal(ctx context.Context, sig string) error {
 }
 
 // Info returns the raw process info map.
-func (p *Process) Info() map[string]interface{} {
+func (p *Process) Info() map[string]any {
 	return p.info
 }

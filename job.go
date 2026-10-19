@@ -12,7 +12,7 @@ const activeJobWrapperClass = "Sidekiq::ActiveJob::Wrapper"
 // JobRecord represents an immutable Sidekiq job.
 // It provides accessors for all standard job fields.
 type JobRecord struct {
-	item  map[string]interface{}
+	item  map[string]any
 	value string
 	queue string
 }
@@ -59,16 +59,16 @@ func (j *JobRecord) DisplayClass() string {
 }
 
 // Args returns the job arguments.
-func (j *JobRecord) Args() []interface{} {
+func (j *JobRecord) Args() []any {
 	return sjson.GetSlice(j.item, "args")
 }
 
 // DisplayArgs returns the job arguments, unwrapping ActiveJob if present.
-func (j *JobRecord) DisplayArgs() []interface{} {
+func (j *JobRecord) DisplayArgs() []any {
 	if j.Class() == activeJobWrapperClass {
 		args := j.Args()
 		if len(args) > 0 {
-			if argMap, ok := args[0].(map[string]interface{}); ok {
+			if argMap, ok := args[0].(map[string]any); ok {
 				if arguments := sjson.GetSlice(argMap, "arguments"); arguments != nil {
 					return arguments
 				}
@@ -144,12 +144,12 @@ func (j *JobRecord) Latency() float64 {
 }
 
 // Get returns a raw value from the job's data by key.
-func (j *JobRecord) Get(key string) interface{} {
+func (j *JobRecord) Get(key string) any {
 	return j.item[key]
 }
 
 // Item returns the raw job data map.
-func (j *JobRecord) Item() map[string]interface{} {
+func (j *JobRecord) Item() map[string]any {
 	return j.item
 }
 

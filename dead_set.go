@@ -32,7 +32,7 @@ type KillOptions struct {
 }
 
 // Kill adds a job to the dead set.
-func (ds *DeadSet) Kill(ctx context.Context, job map[string]interface{}, opts *KillOptions) error {
+func (ds *DeadSet) Kill(ctx context.Context, job map[string]any, opts *KillOptions) error {
 	now := time.Now()
 
 	// Set error info

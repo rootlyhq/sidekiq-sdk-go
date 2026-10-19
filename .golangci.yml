@@ -19,17 +19,22 @@ linters:
   default: none
   enable:
     - bodyclose
+    - copyloopvar
+    - errorlint
     - gocritic
     - gocyclo
     - goprintffuncname
     - govet
     - ineffassign
+    - intrange
     - misspell
+    - modernize
     - nakedret
     - staticcheck
     - unconvert
     - unparam
     - unused
+    - usestdlibvars
     - whitespace
   settings:
     gocyclo:

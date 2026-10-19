@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Use `any` instead of `interface{}` throughout (type alias, no API break)
+- Apply Go modernizers (`range` over int, `maps.Copy`)
+- Compare sentinel errors with `errors.Is` instead of `==`
+- Enable `modernize`, `errorlint`, `intrange`, `copyloopvar`, `usestdlibvars` linters
+- Docs now state Go 1.26+ (matches `go.mod`)
+
 ## [0.1.0] - 2025-01-01
 
 ### Added
