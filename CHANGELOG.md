@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Minimum Go version is now 1.26** (was 1.24)
 - Bump `github.com/redis/go-redis/v9` to v9.23.0
+- Bump `github.com/alicebob/miniredis/v2` (test-only) to v2.39.0
 - Use `any` instead of `interface{}` throughout (type alias, no API break)
 - Apply Go modernizers (`range` over int, `maps.Copy`)
 - Compare sentinel errors with `errors.Is` instead of `==`
