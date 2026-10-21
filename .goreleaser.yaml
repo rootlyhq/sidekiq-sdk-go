@@ -18,7 +18,8 @@ changelog:
       - "^docs:"
       - "^test:"
       - "^ci:"
-      - "^chore:"
+      - "^chore: release"
+      - "^Merge pull request"
   groups:
     - title: Features
       regexp: "^feat"
@@ -26,6 +27,9 @@ changelog:
     - title: Bug Fixes
       regexp: "^fix"
       order: 1
+    - title: Dependencies
+      regexp: "^deps"
+      order: 2
     - title: Other
       order: 999
 
