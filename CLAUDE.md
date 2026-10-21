@@ -205,7 +205,7 @@ Located in `scripts.go`. Used for atomic operations:
 2. Add tests using miniredis fixtures
 3. Update example_test.go if user-facing
 4. Run `make check` to verify
-5. Update CHANGELOG.md
+5. Use a conventional commit prefix (`feat:`, `fix:`); release notes on GitHub Releases are generated from commits
 
 ## Debug
 
