@@ -2,7 +2,9 @@ package sidekiq
 
 import (
 	"context"
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/rootlyhq/sidekiq-sdk-go/internal/testdata"
 )
@@ -226,5 +228,24 @@ func TestAllQueues(t *testing.T) {
 		if !names[name] {
 			t.Errorf("AllQueues() missing queue %q", name)
 		}
+	}
+}
+
+func TestQueue_Latency_Sidekiq8(t *testing.T) {
+	client, mr := setupTestClient(t)
+	ctx := context.Background()
+
+	enqueued := time.Now().Add(-120 * time.Second).UnixMilli()
+	mr.SAdd("queues", "default")
+	mr.Lpush("queue:default", fmt.Sprintf(
+		`{"class":"W","args":[],"jid":"j1","queue":"default","created_at":%d,"enqueued_at":%d}`,
+		enqueued, enqueued))
+
+	latency, err := NewQueue(client, "default").Latency(ctx)
+	if err != nil {
+		t.Fatalf("Latency() error = %v", err)
+	}
+	if latency < 119 || latency > 130 {
+		t.Errorf("Latency() = %v, want ~120", latency)
 	}
 }

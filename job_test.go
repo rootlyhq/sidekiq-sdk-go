@@ -2,6 +2,7 @@ package sidekiq
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -151,5 +152,41 @@ func TestJobRecord_Get(t *testing.T) {
 	}
 	if v := record.Get("nonexistent"); v != nil {
 		t.Errorf("Get(nonexistent) = %v, want nil", v)
+	}
+}
+
+func TestJobRecord_Sidekiq8MillisecondTimestamps(t *testing.T) {
+	enqueued := time.Now().Add(-120 * time.Second).Truncate(time.Millisecond)
+	failed := enqueued.Add(10 * time.Second)
+
+	// Sidekiq 8 stores timestamps as integer milliseconds.
+	data := fmt.Sprintf(`{"class":"MyWorker","args":[],"jid":"abc","queue":"default",`+
+		`"created_at":%d,"enqueued_at":%d,"failed_at":%d,"retried_at":%d}`,
+		enqueued.UnixMilli(), enqueued.UnixMilli(), failed.UnixMilli(), failed.UnixMilli())
+
+	record, err := newJobRecord(data, "default")
+	if err != nil {
+		t.Fatalf("newJobRecord() error = %v", err)
+	}
+
+	for name, got := range map[string]time.Time{
+		"CreatedAt":  record.CreatedAt(),
+		"EnqueuedAt": record.EnqueuedAt(),
+	} {
+		if !got.Equal(enqueued) {
+			t.Errorf("%s() = %v, want %v", name, got, enqueued)
+		}
+	}
+	for name, got := range map[string]time.Time{
+		"FailedAt":  record.FailedAt(),
+		"RetriedAt": record.RetriedAt(),
+	} {
+		if !got.Equal(failed) {
+			t.Errorf("%s() = %v, want %v", name, got, failed)
+		}
+	}
+
+	if lat := record.Latency(); lat < 119 || lat > 130 {
+		t.Errorf("Latency() = %v, want ~120", lat)
 	}
 }

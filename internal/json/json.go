@@ -65,12 +65,27 @@ func GetBool(m map[string]any, key string) bool {
 	return false
 }
 
-// GetTime returns a time.Time from a Unix timestamp float64, or zero time if not found.
+// millisecondThreshold separates second-based from millisecond-based Unix
+// timestamps. 1e11 seconds is year 5138; 1e11 milliseconds is March 1973.
+// Any realistic job timestamp falls clearly on one side.
+const millisecondThreshold = 1e11
+
+// GetTime returns a time.Time from a Unix timestamp, or zero time if not found.
+//
+// Sidekiq < 8 stores timestamps as fractional seconds (e.g. 1700000000.123).
+// Sidekiq 8 stores them as integer milliseconds (e.g. 1700000000123).
+// Ruby's Sidekiq::API distinguishes them by type (Float vs Integer), but JSON
+// numbers decode to float64 in Go, so the magnitude is used instead.
 func GetTime(m map[string]any, key string) time.Time {
-	if f := GetFloat64(m, key); f > 0 {
-		return time.Unix(int64(f), int64((f-float64(int64(f)))*1e9))
+	f := GetFloat64(m, key)
+	if f <= 0 {
+		return time.Time{}
 	}
-	return time.Time{}
+	if f >= millisecondThreshold {
+		return time.UnixMilli(int64(f))
+	}
+	sec := int64(f)
+	return time.Unix(sec, int64((f-float64(sec))*1e9))
 }
 
 // GetStringSlice returns a string slice from a map, or nil if not found/wrong type.
