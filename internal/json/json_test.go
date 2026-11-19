@@ -185,6 +185,34 @@ func TestGetTime(t *testing.T) {
 	})
 }
 
+func TestGetTime_SidekiqVersions(t *testing.T) {
+	want := time.Date(2025, 6, 1, 12, 30, 45, 123_000_000, time.UTC)
+
+	tests := []struct {
+		name  string
+		value float64
+	}{
+		{"sidekiq 7 fractional seconds", float64(want.Unix()) + 0.123},
+		{"sidekiq 8 integer milliseconds", float64(want.UnixMilli())},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := GetTime(map[string]any{"t": tt.value}, "t")
+			if d := got.Sub(want); d < -time.Millisecond || d > time.Millisecond {
+				t.Errorf("GetTime(%v) = %v, want %v (diff %v)", tt.value, got.UTC(), want, d)
+			}
+		})
+	}
+
+	t.Run("whole seconds stay seconds", func(t *testing.T) {
+		got := GetTime(map[string]any{"t": float64(want.Unix())}, "t")
+		if got.Unix() != want.Unix() {
+			t.Errorf("GetTime() unix = %d, want %d", got.Unix(), want.Unix())
+		}
+	})
+}
+
 func TestGetStringSlice(t *testing.T) {
 	m := map[string]any{
 		"tags":    []any{"tag1", "tag2", "tag3"},
